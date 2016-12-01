@@ -20,11 +20,13 @@
             android:layout_height="wrap_content">
 
             <RadioButton
+                android:id="@+id/personalRB"
                 android:layout_width="wrap_content"
                 android:text="Personal"
                 android:layout_height="wrap_content" />
 
             <RadioButton
+                android:id="@+id/officialRB"
                 android:layout_width="wrap_content"
                 android:text="Offical"
                 android:layout_marginLeft="23dp"
@@ -35,18 +37,44 @@
     </LinearLayout>
 
     <EditText
+        android:id="@+id/titleEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Title" />
 
     <EditText
+        android:id="@+id/detailsEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Details" />
 
     <EditText
+        android:id="@+id/dateEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Title" />
-    
+        android:hint="Date" />
+
+    <EditText
+        android:id="@+id/timeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Time" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Submit"
+        />
+
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        />
+
 </LinearLayout>
