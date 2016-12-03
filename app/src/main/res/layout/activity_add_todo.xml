@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:gravity="center"
+            android:id="@+id/typeRadioGroup"
             android:layout_height="wrap_content">
 
             <RadioButton
