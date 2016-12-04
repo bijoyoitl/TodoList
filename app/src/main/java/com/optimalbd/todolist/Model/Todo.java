@@ -10,23 +10,20 @@ public class Todo {
     private String details;
     private String date;
     private String time;
+    private long selectedTime;
     private String type;
 
-    public Todo(String title, String details, String date, String time, String type) {
+    public Todo(String title, String details, String date, String time, long selectedTime, String type) {
         this.title = title;
         this.details = details;
         this.date = date;
         this.time = time;
+        this.selectedTime = selectedTime;
         this.type = type;
     }
 
-    public Todo(String id, String title, String details, String date, String time, String type) {
-        this.id = id;
-        this.title = title;
-        this.details = details;
-        this.date = date;
-        this.time = time;
-        this.type = type;
+    public long getSelectedTime() {
+        return selectedTime;
     }
 
     public String getId() {

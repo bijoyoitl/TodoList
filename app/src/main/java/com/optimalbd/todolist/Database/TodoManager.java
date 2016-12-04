@@ -31,6 +31,7 @@ public class TodoManager {
         values.put(TodoDbHelper.TODO_DETAILS, todo.getDetails());
         values.put(TodoDbHelper.TODO_DATE, todo.getDate());
         values.put(TodoDbHelper.TODO_TIME, todo.getTime());
+        values.put(TodoDbHelper.TODO_SELECTED_TIME, todo.getSelectedTime());
         values.put(TodoDbHelper.TODO_TYPE, todo.getType());
 
         try {

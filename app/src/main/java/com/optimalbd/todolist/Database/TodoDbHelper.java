@@ -19,14 +19,16 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     public static final String TODO_DETAILS = "details";
     public static final String TODO_DATE = "date";
     public static final String TODO_TIME = "time";
+    public static final String TODO_SELECTED_TIME = "selectedTime";
     public static final String TODO_TYPE = "type";
 
-    private static final String TODO_TABLE = "CREATE TABLE" + TODO_TABLE_NAME + "("
+    private static final String TODO_TABLE = " CREATE TABLE " + TODO_TABLE_NAME + "("
             + TODO_ID + " integer primary key autoincrement not null,"
             + TODO_TITLE + " varchar,"
             + TODO_DETAILS + " varchar,"
             + TODO_DATE + " varchar,"
             + TODO_TIME + " varchar,"
+            + TODO_SELECTED_TIME + " long,"
             + TODO_TYPE + " varchar);";
 
 
