@@ -22,9 +22,12 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     ListView doneListView;
     ArrayList<Todo> todoArrayList;
+    ArrayList<Todo> doneArrayList;
     TodoManager todoManager;
     Context context;
     TitleAdapter titleAdapter;
+    TitleAdapter doneTitleAdapter;
+    long currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +40,20 @@ public class MainActivity extends AppCompatActivity {
         doneListView = (ListView) findViewById(R.id.listView2);
 
         setSupportActionBar(toolbar);
+
+        currentTime = System.currentTimeMillis();
+
         todoArrayList = new ArrayList<>();
+        doneArrayList = new ArrayList<>();
         todoManager = new TodoManager(context);
 
-        todoArrayList = todoManager.getAllTodoTitle();
+        todoArrayList = todoManager.getAllTodoTitle(currentTime);
+        doneArrayList= todoManager.getAllDoneTitle(currentTime);
+
         titleAdapter = new TitleAdapter(context, todoArrayList);
         listView.setAdapter(titleAdapter);
-        doneListView.setAdapter(titleAdapter);
+        doneTitleAdapter = new TitleAdapter(context, doneArrayList);
+        doneListView.setAdapter(doneTitleAdapter);
 
         ListUtils.setDynamicHeight(listView);
         ListUtils.setDynamicHeight(doneListView);

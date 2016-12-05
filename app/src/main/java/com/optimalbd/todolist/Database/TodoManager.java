@@ -47,7 +47,7 @@ public class TodoManager {
         return success;
     }
 
-    public ArrayList<Todo> getAllTodoTitle() {
+    public ArrayList<Todo> getAllTodoTitle(long currentTime) {
         ArrayList<Todo> todoArrayList = null;
         Todo todo;
 
@@ -55,7 +55,40 @@ public class TodoManager {
             todoArrayList = new ArrayList<>();
             sqLiteDatabase = todoDbHelper.getReadableDatabase();
 
-            String query = "SELECT " + TodoDbHelper.TODO_ID + "," + TodoDbHelper.TODO_TITLE + "," + TodoDbHelper.TODO_DATE + "," + TodoDbHelper.TODO_TYPE + " FROM " + TodoDbHelper.TODO_TABLE_NAME + " order by " + TodoDbHelper.TODO_SELECTED_TIME + " asc";
+            String query = "SELECT " + TodoDbHelper.TODO_ID + "," + TodoDbHelper.TODO_TITLE + "," + TodoDbHelper.TODO_DATE + "," + TodoDbHelper.TODO_TYPE + " FROM " + TodoDbHelper.TODO_TABLE_NAME + " where " + TodoDbHelper.TODO_SELECTED_TIME + " > " + currentTime + " order by " + TodoDbHelper.TODO_SELECTED_TIME + " asc";
+            cursor = sqLiteDatabase.rawQuery(query, null);
+
+            if (!cursor.isLast()) {
+                while (cursor.moveToNext()) {
+
+                    String id = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_ID));
+                    String title = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TITLE));
+                    String date = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_DATE));
+                    String user_type = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TYPE));
+
+                    todo = new Todo(id, title, date, user_type);
+                    todoArrayList.add(todo);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+
+        return todoArrayList;
+    }
+
+    public ArrayList<Todo> getAllDoneTitle(long currentTime) {
+        ArrayList<Todo> todoArrayList = null;
+        Todo todo;
+
+        try {
+            todoArrayList = new ArrayList<>();
+            sqLiteDatabase = todoDbHelper.getReadableDatabase();
+
+            String query = "SELECT " + TodoDbHelper.TODO_ID + "," + TodoDbHelper.TODO_TITLE + "," + TodoDbHelper.TODO_DATE + "," + TodoDbHelper.TODO_TYPE + " FROM " + TodoDbHelper.TODO_TABLE_NAME + " where " + TodoDbHelper.TODO_SELECTED_TIME + " < " + currentTime;
             cursor = sqLiteDatabase.rawQuery(query, null);
 
             if (!cursor.isLast()) {
