@@ -13,6 +13,22 @@ public class Todo {
     private long selectedTime;
     private String type;
 
+    public Todo(String id, String title, String date, String type) {
+        this.id = id;
+        this.title = title;
+        this.date = date;
+        this.type = type;
+    }
+
+    public Todo(String id, String title, String details, String date, String time, String type) {
+        this.id = id;
+        this.title = title;
+        this.details = details;
+        this.date = date;
+        this.time = time;
+        this.type = type;
+    }
+
     public Todo(String title, String details, String date, String time, long selectedTime, String type) {
         this.title = title;
         this.details = details;

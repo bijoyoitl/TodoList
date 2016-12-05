@@ -7,35 +7,37 @@
     android:orientation="vertical"
     tools:context="com.optimalbd.todolist.AddTodoActivity">
 
+    <include layout="@layout/app_bar" />
+
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-
-        android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="12dp"
+        android:gravity="center">
 
 
         <RadioGroup
-            android:checkedButton="@+id/personalRB"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
             android:id="@+id/typeRadioGroup"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/personalRB"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/personalRB"
                 android:layout_width="wrap_content"
-                android:text="Personal"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Personal" />
 
             <RadioButton
                 android:id="@+id/officialRB"
                 android:layout_width="wrap_content"
-                android:text="Offical"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="23dp"
                 android:layout_marginStart="23dp"
-                android:layout_height="wrap_content" />
+                android:text="Offical" />
         </RadioGroup>
 
     </LinearLayout>
@@ -68,17 +70,15 @@
         android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
         android:text="Submit"
-        />
+        android:textAllCaps="false" />
 
 
     <Button
         android:id="@+id/cancelButton"
-        android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancel"
-        />
+        android:textAllCaps="false" />
 
 </LinearLayout>
