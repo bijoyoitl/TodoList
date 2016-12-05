@@ -15,8 +15,6 @@
         android:onClick="addTdo"
         android:text="Add" />
 
-<!--ldfdfldfldfldfdfdsf-->
-    <!--fdfdsklfldskfld;kfd;lfkd;fldkfl;dskfldskfdl-->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
