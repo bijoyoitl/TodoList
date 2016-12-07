@@ -8,21 +8,21 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.optimalbd.todolist.Adapter.DetailsAdapter;
 import com.optimalbd.todolist.Database.TodoManager;
 import com.optimalbd.todolist.Model.Todo;
 
 import java.util.ArrayList;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
     Toolbar toolbar;
     Context context;
+    String tId;
     String id;
-    ListView detailsListView;
     TodoManager todoManager;
     ArrayList<Todo> todoArrayList;
 
@@ -30,6 +30,8 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView detailsTextView;
     private TextView dateTextView;
     private TextView timeTextView;
+    Button editButton;
+    long currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,31 +44,31 @@ public class DetailsActivity extends AppCompatActivity {
         detailsTextView = (TextView) findViewById(R.id.detailsTextView);
         dateTextView = (TextView) findViewById(R.id.dateTextView);
         timeTextView = (TextView) findViewById(R.id.timeTextView);
+        editButton = (Button) findViewById(R.id.editButton);
+
+        editButton.setOnClickListener(this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         todoArrayList = new ArrayList<>();
 
+        tId = getIntent().getStringExtra("todoId");
         id = getIntent().getStringExtra("id");
 
+        currentTime = System.currentTimeMillis() + 86400000;
+
         todoManager = new TodoManager(context);
-        todoArrayList = todoManager.getTodoDetails(id);
+        todoArrayList = todoManager.getTodoDetails(tId);
 
         titleTextView.setText(todoArrayList.get(0).getTitle());
         detailsTextView.setText(todoArrayList.get(0).getDetails());
         dateTextView.setText(todoArrayList.get(0).getDate());
         timeTextView.setText(todoArrayList.get(0).getTime());
 
+
     }
 
-    public void edit(View view) {
-        Intent intent = new Intent(context, AddTodoActivity.class);
-        intent.putExtra("id","2");
-        intent.putExtra("todoId", id);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
 
     public void delete(View view) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
@@ -76,7 +78,7 @@ public class DetailsActivity extends AppCompatActivity {
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                long success = todoManager.deleteTodo(id);
+                long success = todoManager.deleteTodo(tId);
                 if (success > 0) {
                     Toast.makeText(DetailsActivity.this, "Delete Successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(DetailsActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -105,6 +107,22 @@ public class DetailsActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.editButton:
+                Intent intent = new Intent(context, UpdateTodoActivity.class);
+                intent.putExtra("id", "2");
+                intent.putExtra("todoId", tId);
+                intent.putExtra("listId", id);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
     }
 }

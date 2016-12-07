@@ -27,6 +27,7 @@
              >
 
             <TextView
+                android:id="@+id/todoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -43,6 +44,7 @@
             </ListView>
 
             <TextView
+                android:id="@+id/doneTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"

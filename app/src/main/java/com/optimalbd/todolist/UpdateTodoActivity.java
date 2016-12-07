@@ -31,9 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
-public class AddTodoActivity extends AppCompatActivity implements View.OnClickListener {
+public class UpdateTodoActivity extends AppCompatActivity implements View.OnClickListener {
 
     Context context;
     Toolbar toolbar;
@@ -79,7 +78,8 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_todo);
+        setContentView(R.layout.activity_update_todo);
+
         this.context = this;
 
         idsReference();
@@ -89,6 +89,7 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
 
         id = getIntent().getStringExtra("id");
         todoId = getIntent().getStringExtra("tId");
+
 
         todoManager = new TodoManager(context);
         calendar = Calendar.getInstance();
@@ -102,6 +103,48 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
         currentTime = System.currentTimeMillis();
 
 
+        if (id.equals("2")) {
+            listId = getIntent().getStringExtra("listId");
+            todoId = getIntent().getStringExtra("todoId");
+            getSupportActionBar().setTitle("Update Todo");
+            todoArrayList = new ArrayList<>();
+
+            todoArrayList = todoManager.getTodoDetails(todoId);
+            oldSelectedTime = todoManager.getSelectedTime(todoId);
+
+            dateTimeArrayList = new ArrayList<>();
+
+            dateTimeArrayList = todoManager.getAllDateTime(todoId);
+
+            titleEditText.setText(todoArrayList.get(0).getTitle());
+            detailsEditText.setText(todoArrayList.get(0).getDetails());
+            dateEditText.setText(todoArrayList.get(0).getDate());
+            timeEditText.setText(todoArrayList.get(0).getTime());
+
+            String type = todoArrayList.get(0).getType();
+            typeRadioGroup.check(Integer.parseInt(type));
+
+            submitButton.setText("Update");
+
+            if (listId.equals("2")) {
+                personalRB.setClickable(false);
+                officialRB.setClickable(false);
+                timeEditText.setClickable(false);
+
+                titleEditText.setInputType(InputType.TYPE_NULL);
+                detailsEditText.setInputType(InputType.TYPE_NULL);
+
+                titleEditText.setTextColor(getResources().getColor(R.color.colorPrimary));
+                detailsEditText.setTextColor(getResources().getColor(R.color.colorPrimary));
+            }
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 
@@ -134,35 +177,50 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 time = timeEditText.getText().toString().trim();
 
                 selectedTime = calendar1.getTimeInMillis();
-                Log.e("AA", "select time : " + selectedTime);
+
 
                 if (title.equals("")) {
                     Toast.makeText(context, "Please Enter Title !", Toast.LENGTH_SHORT).show();
                 } else {
                     todo = new Todo(title, details, date, time, selectedTime, type + "");
 
-                        long success = todoManager.addTodo(todo);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                    builder.setTitle("Update Alert !");
+                    builder.setMessage("Do you want to update this todo info ? ");
 
-                        if (success > 0) {
-                            Toast.makeText(context, "Todo Add Successful", Toast.LENGTH_SHORT).show();
-                            int todoId = todoManager.getLastInsertId();
-                            DateTime dateTime = new DateTime(todoId, selectYear, selectMonth, selectDay, selectHour, selectMinute, selectSecond);
-                            long a = todoManager.addDateTime(dateTime);
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                            if (a > 0) {
-                                Log.e("ATA", " date time add successful");
+                            long success = todoManager.updateTodoInfo(todo, todoId);
+
+                            if (success > 0) {
+                                Toast.makeText(context, "Todo Update Successful", Toast.LENGTH_SHORT).show();
+                                DateTime dateTime = new DateTime(selectYear, selectMonth, selectDay, selectHour, selectMinute, selectSecond);
+                                long a = todoManager.updateDateTime(dateTime, todoId);
+                                if (a > 0) {
+                                    Log.e("UA", "update date s");
+                                } else {
+                                    Log.e("UA", "update date f");
+                                }
+
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
                             } else {
-                                Log.e("ATA", " date time add fail");
+                                Toast.makeText(context, "Todo Update Failed", Toast.LENGTH_SHORT).show();
                             }
-
-                            Intent intent = new Intent(context, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(context, "Todo Add Failed", Toast.LENGTH_SHORT).show();
                         }
+                    });
 
-
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    android.app.AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
 
                 }
 
@@ -177,13 +235,12 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 int month;
                 int day;
 
-                    year = calendar.get(Calendar.YEAR);
-                    month = calendar.get(Calendar.MONTH);
-                    day = calendar.get(Calendar.DAY_OF_MONTH);
+                year = dateTimeArrayList.get(0).getYear();
+                month = dateTimeArrayList.get(0).getMonth();
+                day = dateTimeArrayList.get(0).getDay();
 
 
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(AddTodoActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(UpdateTodoActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
 
@@ -234,13 +291,13 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 int hour;
                 int minute;
 
-                    hour = calendar.get(Calendar.HOUR_OF_DAY);
-                    minute = calendar.get(Calendar.MINUTE);
+                hour = dateTimeArrayList.get(0).getHour();
 
+                minute = dateTimeArrayList.get(0).getMinute();
 
                 TimePickerDialog timePickerDialog;
 
-                timePickerDialog = new TimePickerDialog(AddTodoActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                timePickerDialog = new TimePickerDialog(UpdateTodoActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 

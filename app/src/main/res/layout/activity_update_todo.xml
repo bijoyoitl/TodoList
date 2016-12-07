@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.optimalbd.todolist.AddTodoActivity">
+    tools:context="com.optimalbd.todolist.UpdateTodoActivity">
 
     <include layout="@layout/app_bar" />
 

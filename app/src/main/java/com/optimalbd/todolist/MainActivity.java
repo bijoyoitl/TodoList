@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.optimalbd.todolist.Adapter.TitleAdapter;
 import com.optimalbd.todolist.Database.TodoManager;
@@ -18,6 +19,7 @@ import com.optimalbd.todolist.Model.Todo;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
     Toolbar toolbar;
     ListView listView;
     ListView doneListView;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     TitleAdapter titleAdapter;
     TitleAdapter doneTitleAdapter;
     long currentTime;
+    TextView todoTextView;
+    TextView doneTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +42,33 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         listView = (ListView) findViewById(R.id.listView1);
         doneListView = (ListView) findViewById(R.id.listView2);
-
+        todoTextView = (TextView) findViewById(R.id.todoTextView);
+        doneTextView = (TextView) findViewById(R.id.doneTextView);
         setSupportActionBar(toolbar);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                intent.putExtra("todoId", todoArrayList.get(i).getId());
+                intent.putExtra("id", "1");
+                startActivity(intent);
+            }
+        });
+        doneListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                intent.putExtra("todoId", doneArrayList.get(i).getId());
+                intent.putExtra("id", "2");
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         currentTime = System.currentTimeMillis();
 
@@ -48,7 +77,14 @@ public class MainActivity extends AppCompatActivity {
         todoManager = new TodoManager(context);
 
         todoArrayList = todoManager.getAllTodoTitle(currentTime);
-        doneArrayList= todoManager.getAllDoneTitle(currentTime);
+        doneArrayList = todoManager.getAllDoneTitle(currentTime);
+
+        int todoSize = todoArrayList.size();
+        int doneSize = doneArrayList.size();
+
+
+        todoTextView.setText("Todo " + "(" + todoSize + ")");
+        doneTextView.setText("Done " + "(" + doneSize + ")");
 
         titleAdapter = new TitleAdapter(context, todoArrayList);
         listView.setAdapter(titleAdapter);
@@ -58,19 +94,11 @@ public class MainActivity extends AppCompatActivity {
         ListUtils.setDynamicHeight(listView);
         ListUtils.setDynamicHeight(doneListView);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                intent.putExtra("id", todoArrayList.get(i).getId());
-                startActivity(intent);
-            }
-        });
     }
 
     public void addTdo(View view) {
         Intent intent = new Intent(context, AddTodoActivity.class);
-        intent.putExtra("id","1");
+        intent.putExtra("id", "1");
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

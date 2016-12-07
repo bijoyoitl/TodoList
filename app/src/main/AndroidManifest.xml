@@ -14,11 +14,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".AddTodoActivity">
-        </activity>
-        <activity android:name=".DetailsActivity"></activity>
+        <activity android:name=".AddTodoActivity"></activity>
+        <activity android:name=".DetailsActivity" />
+        <activity android:name=".UpdateTodoActivity"></activity>
     </application>
 
 </manifest>

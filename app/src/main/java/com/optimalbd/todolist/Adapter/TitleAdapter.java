@@ -53,6 +53,7 @@ public class TitleAdapter extends BaseAdapter {
 
             viewHolder.titleTextView = (TextView)rowView.findViewById(R.id.titleTextView);
             viewHolder.dateTextView = (TextView)rowView.findViewById(R.id.dateTextView);
+            viewHolder.timeTextView = (TextView)rowView.findViewById(R.id.timeTextView);
 
             rowView.setTag(viewHolder);
         }else {
@@ -60,11 +61,13 @@ public class TitleAdapter extends BaseAdapter {
         }
         viewHolder.titleTextView.setText(todoArrayList.get(i).getTitle());
         viewHolder.dateTextView.setText(todoArrayList.get(i).getDate());
+        viewHolder.timeTextView.setText(todoArrayList.get(i).getTime());
         return rowView;
     }
 
     public class ViewHolder{
         private TextView titleTextView;
         private TextView dateTextView;
+        private TextView timeTextView;
     }
 }

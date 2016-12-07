@@ -22,6 +22,16 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     public static final String TODO_SELECTED_TIME = "selectedTime";
     public static final String TODO_TYPE = "type";
 
+    public static final String DATETIME_TABLE_NAME = "datetime";
+    public static final String DATETIME_ID = "_id";
+    public static final String DATETIME_TODO_ID = "todoId";
+    public static final String DATETIME_YEAR = "year";
+    public static final String DATETIME_MONTH = "month";
+    public static final String DATETIME_DAY = "day";
+    public static final String DATETIME_HOUR = "hour";
+    public static final String DATETIME_MINUTE = "minute";
+    public static final String DATETIME_SECOND = "second";
+
     private static final String TODO_TABLE = " CREATE TABLE " + TODO_TABLE_NAME + "("
             + TODO_ID + " integer primary key autoincrement not null,"
             + TODO_TITLE + " varchar,"
@@ -31,6 +41,16 @@ public class TodoDbHelper extends SQLiteOpenHelper {
             + TODO_SELECTED_TIME + " long,"
             + TODO_TYPE + " varchar);";
 
+    private static final String DATETIME_TABLE = " CREATE TABLE " + DATETIME_TABLE_NAME + "("
+            + DATETIME_ID + " integer primary key autoincrement not null,"
+            + DATETIME_TODO_ID + " integer,"
+            + DATETIME_YEAR + " integer,"
+            + DATETIME_MONTH + " integer,"
+            + DATETIME_DAY + " integer,"
+            + DATETIME_HOUR + " integer,"
+            + DATETIME_MINUTE + " integer,"
+            + DATETIME_SECOND + " integer);";
+
 
     public TodoDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,12 +59,13 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(TODO_TABLE);
-
+        sqLiteDatabase.execSQL(DATETIME_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXITS" + TODO_TABLE);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXITS" + DATETIME_TABLE);
         onCreate(sqLiteDatabase);
     }
 }
