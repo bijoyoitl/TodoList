@@ -31,7 +31,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     private TextView dateTextView;
     private TextView timeTextView;
     Button editButton;
-    long currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         tId = getIntent().getStringExtra("todoId");
         id = getIntent().getStringExtra("id");
 
-        currentTime = System.currentTimeMillis() + 86400000;
 
         todoManager = new TodoManager(context);
         todoArrayList = todoManager.getTodoDetails(tId);

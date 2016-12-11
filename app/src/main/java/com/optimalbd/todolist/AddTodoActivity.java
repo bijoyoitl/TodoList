@@ -74,7 +74,8 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     int selectHour;
     int selectMinute;
     int selectSecond;
-
+    Date date1;
+    long dateMilli;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,6 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
         timeEditText.setOnClickListener(this);
 
         currentTime = System.currentTimeMillis();
-
 
 
     }
@@ -134,34 +134,45 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 time = timeEditText.getText().toString().trim();
 
                 selectedTime = calendar1.getTimeInMillis();
-                Log.e("AA", "select time : " + selectedTime);
+//                Log.e("AA", "select time : " + selectedTime);
 
                 if (title.equals("")) {
                     Toast.makeText(context, "Please Enter Title !", Toast.LENGTH_SHORT).show();
                 } else {
-                    todo = new Todo(title, details, date, time, selectedTime, type + "");
+                    if (!date.equals("")) {
+                        try {
+                            date1 = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).parse(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        dateMilli = date1.getTime();
+                    } else {
+                        dateMilli = 0L;
+                    }
 
-                        long success = todoManager.addTodo(todo);
 
-                        if (success > 0) {
-                            Toast.makeText(context, "Todo Add Successful", Toast.LENGTH_SHORT).show();
-                            int todoId = todoManager.getLastInsertId();
-                            DateTime dateTime = new DateTime(todoId, selectYear, selectMonth, selectDay, selectHour, selectMinute, selectSecond);
-                            long a = todoManager.addDateTime(dateTime);
+                    todo = new Todo(title, details, date, dateMilli, time, selectedTime, type + "");
 
-                            if (a > 0) {
-                                Log.e("ATA", " date time add successful");
-                            } else {
-                                Log.e("ATA", " date time add fail");
-                            }
+                    long success = todoManager.addTodo(todo);
 
-                            Intent intent = new Intent(context, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+                    if (success > 0) {
+                        Toast.makeText(context, "Todo Add Successful", Toast.LENGTH_SHORT).show();
+                        int todoId = todoManager.getLastInsertId();
+                        DateTime dateTime = new DateTime(todoId, selectYear, selectMonth, selectDay, selectHour, selectMinute, selectSecond);
+                        long a = todoManager.addDateTime(dateTime);
+
+                        if (a > 0) {
+                            Log.e("ATA", " date time add successful");
                         } else {
-                            Toast.makeText(context, "Todo Add Failed", Toast.LENGTH_SHORT).show();
+                            Log.e("ATA", " date time add fail");
                         }
 
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(context, "Todo Add Failed", Toast.LENGTH_SHORT).show();
+                    }
 
 
                 }
@@ -173,14 +184,10 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.dateEditText:
-                int year;
-                int month;
-                int day;
 
-                    year = calendar.get(Calendar.YEAR);
-                    month = calendar.get(Calendar.MONTH);
-                    day = calendar.get(Calendar.DAY_OF_MONTH);
-
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
 
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(AddTodoActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -195,36 +202,10 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                         selectMonth = selectedMonth;
                         selectDay = selectedDay;
 
-                        int month = 0;
-
-                        if (selectedMonth == 0) {
-                            month = 1;
-                        } else if (selectedMonth == 1) {
-                            month = 2;
-                        } else if (selectedMonth == 2) {
-                            month = 3;
-                        } else if (selectedMonth == 3) {
-                            month = 4;
-                        } else if (selectedMonth == 4) {
-                            month = 5;
-                        } else if (selectedMonth == 5) {
-                            month = 6;
-                        } else if (selectedMonth == 6) {
-                            month = 7;
-                        } else if (selectedMonth == 7) {
-                            month = 8;
-                        } else if (selectedMonth == 8) {
-                            month = 9;
-                        } else if (selectedMonth == 9) {
-                            month = 10;
-                        } else if (selectedMonth == 10) {
-                            month = 11;
-                        } else if (selectedMonth == 11) {
-                            month = 12;
-                        }
-
+                        int month = selectMonth + 1;
 
                         dateEditText.setText(selectedDay + "-" + month + "-" + selectedYear);
+
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -234,8 +215,8 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 int hour;
                 int minute;
 
-                    hour = calendar.get(Calendar.HOUR_OF_DAY);
-                    minute = calendar.get(Calendar.MINUTE);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
 
 
                 TimePickerDialog timePickerDialog;

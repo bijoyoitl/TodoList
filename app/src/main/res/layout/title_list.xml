@@ -21,6 +21,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/timeTextView"
+        android:visibility="gone"
         android:text="time"
         android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/typeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="type"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/completeTextView"
+        android:textSize="20sp"
+        android:text="todo complete"/>
+
 </LinearLayout>

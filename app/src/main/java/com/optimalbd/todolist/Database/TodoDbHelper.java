@@ -18,6 +18,7 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     public static final String TODO_TITLE = "title";
     public static final String TODO_DETAILS = "details";
     public static final String TODO_DATE = "date";
+    public static final String TODO_LONG_DATE = "long_date";
     public static final String TODO_TIME = "time";
     public static final String TODO_SELECTED_TIME = "selectedTime";
     public static final String TODO_TYPE = "type";
@@ -37,6 +38,7 @@ public class TodoDbHelper extends SQLiteOpenHelper {
             + TODO_TITLE + " varchar,"
             + TODO_DETAILS + " varchar,"
             + TODO_DATE + " varchar,"
+            + TODO_LONG_DATE + " long,"
             + TODO_TIME + " varchar,"
             + TODO_SELECTED_TIME + " long,"
             + TODO_TYPE + " varchar);";

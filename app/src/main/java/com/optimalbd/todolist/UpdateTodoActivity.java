@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class UpdateTodoActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,6 +74,9 @@ public class UpdateTodoActivity extends AppCompatActivity implements View.OnClic
     int selectHour;
     int selectMinute;
     int selectSecond;
+
+    Date date1;
+    long dateMilli;
 
 
     @Override
@@ -142,11 +146,6 @@ public class UpdateTodoActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
 
     private void idsReference() {
 
@@ -182,7 +181,20 @@ public class UpdateTodoActivity extends AppCompatActivity implements View.OnClic
                 if (title.equals("")) {
                     Toast.makeText(context, "Please Enter Title !", Toast.LENGTH_SHORT).show();
                 } else {
-                    todo = new Todo(title, details, date, time, selectedTime, type + "");
+
+
+                    if (!date.equals("")) {
+                        try {
+                            date1 = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).parse(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        dateMilli = date1.getTime();
+                    } else {
+                        dateMilli = 0L;
+                    }
+
+                    todo = new Todo(title, details, date,dateMilli, time, selectedTime, type + "");
 
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
                     builder.setTitle("Update Alert !");

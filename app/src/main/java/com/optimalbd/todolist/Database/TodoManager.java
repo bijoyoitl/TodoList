@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.optimalbd.todolist.Model.DateTime;
 import com.optimalbd.todolist.Model.Todo;
@@ -33,6 +34,7 @@ public class TodoManager {
         values.put(TodoDbHelper.TODO_TITLE, todo.getTitle());
         values.put(TodoDbHelper.TODO_DETAILS, todo.getDetails());
         values.put(TodoDbHelper.TODO_DATE, todo.getDate());
+        values.put(TodoDbHelper.TODO_LONG_DATE, todo.getLongDate());
         values.put(TodoDbHelper.TODO_TIME, todo.getTime());
         values.put(TodoDbHelper.TODO_SELECTED_TIME, todo.getSelectedTime());
         values.put(TodoDbHelper.TODO_TYPE, todo.getType());
@@ -65,6 +67,7 @@ public class TodoManager {
                     String id = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_ID));
                     String title = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TITLE));
                     String date = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_DATE));
+                    String id_time = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_SELECTED_TIME));
                     String user_type = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TYPE));
 
                     todo = new Todo(id, title, date, user_type);
@@ -99,6 +102,43 @@ public class TodoManager {
                     String title = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TITLE));
                     String date = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_DATE));
                     String user_type = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TYPE));
+                    String id_time = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_SELECTED_TIME));
+
+
+                    todo = new Todo(id, title, date, user_type);
+                    todoArrayList.add(todo);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+
+        return todoArrayList;
+    }
+    public ArrayList<Todo> getAllCalenderEvent(String sDate) {
+        ArrayList<Todo> todoArrayList = null;
+        Todo todo;
+
+        try {
+            todoArrayList = new ArrayList<>();
+            sqLiteDatabase = todoDbHelper.getReadableDatabase();
+
+            String query = "SELECT * FROM " + TodoDbHelper.TODO_TABLE_NAME+ " where " + TodoDbHelper.TODO_DATE + " = '" + sDate + "'";
+            cursor = sqLiteDatabase.rawQuery(query, null);
+
+            if (!cursor.isLast()) {
+                while (cursor.moveToNext()) {
+
+                    String id = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_ID));
+                    String title = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TITLE));
+                    Log.e("TM", "title : "+title);
+                    String date = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_DATE));
+                    String user_type = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TYPE));
+                    String id_time = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_SELECTED_TIME));
+
 
                     todo = new Todo(id, title, date, user_type);
                     todoArrayList.add(todo);
@@ -182,6 +222,7 @@ public class TodoManager {
             contentValues.put(TodoDbHelper.TODO_TITLE, todo.getTitle());
             contentValues.put(TodoDbHelper.TODO_DETAILS, todo.getDetails());
             contentValues.put(TodoDbHelper.TODO_DATE, todo.getDate());
+            contentValues.put(TodoDbHelper.TODO_LONG_DATE, todo.getLongDate());
             contentValues.put(TodoDbHelper.TODO_TIME, todo.getTime());
             contentValues.put(TodoDbHelper.TODO_SELECTED_TIME, todo.getSelectedTime());
             contentValues.put(TodoDbHelper.TODO_TYPE, todo.getType());
@@ -195,13 +236,16 @@ public class TodoManager {
         return success;
     }
 
-    public long updateTodoTime(Todo todo, String id) {
+    public long updateTodoCompleteTime(Todo todo, String id) {
         long success = 0;
         try {
             sqLiteDatabase = todoDbHelper.getWritableDatabase();
 
             ContentValues contentValues = new ContentValues();
             contentValues.put(TodoDbHelper.TODO_SELECTED_TIME, todo.getSelectedTime());
+            contentValues.put(TodoDbHelper.TODO_DATE, todo.getDate());
+            contentValues.put(TodoDbHelper.TODO_LONG_DATE, todo.getLongDate());
+            contentValues.put(TodoDbHelper.TODO_TIME, todo.getTime());
 
             success = sqLiteDatabase.update(TodoDbHelper.TODO_TABLE_NAME, contentValues, TodoDbHelper.TODO_ID + "=?", new String[]{id});
         } catch (Exception e) {

@@ -9,9 +9,17 @@ public class Todo {
     private String title;
     private String details;
     private String date;
+    private long longDate;
     private String time;
     private long selectedTime;
     private String type;
+
+    public Todo(String date, long longDate, String time, long selectedTime) {
+        this.date = date;
+        this.longDate = longDate;
+        this.time = time;
+        this.selectedTime = selectedTime;
+    }
 
     public Todo(String id, String title, String date, String type) {
         this.id = id;
@@ -29,13 +37,18 @@ public class Todo {
         this.type = type;
     }
 
-    public Todo(String title, String details, String date, String time, long selectedTime, String type) {
+    public Todo(String title, String details, String date, long longDate, String time, long selectedTime, String type) {
         this.title = title;
         this.details = details;
         this.date = date;
+        this.longDate = longDate;
         this.time = time;
         this.selectedTime = selectedTime;
         this.type = type;
+    }
+
+    public long getLongDate() {
+        return longDate;
     }
 
     public long getSelectedTime() {

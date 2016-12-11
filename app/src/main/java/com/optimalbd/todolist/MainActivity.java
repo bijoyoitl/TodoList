@@ -1,13 +1,25 @@
 package com.optimalbd.todolist;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,8 +27,11 @@ import android.widget.TextView;
 import com.optimalbd.todolist.Adapter.TitleAdapter;
 import com.optimalbd.todolist.Database.TodoManager;
 import com.optimalbd.todolist.Model.Todo;
+import com.stacktips.view.CustomCalendarView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -103,4 +118,57 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.option_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_id:
+                Intent intent = new Intent(context,CalenderEventActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+//                android.app.FragmentManager manager = getFragmentManager();
+//                EventDialog dialog = new EventDialog();
+//                dialog.show(manager, "Event_Dialog");
+                return true;
+            default:
+                return true;
+        }
+    }
+
+
+    @SuppressLint("ValidFragment")
+    private class EventDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.calender_event, null);
+            dialogBuilder.setView(dialogView);
+
+            CustomCalendarView calendarView = (CustomCalendarView)dialogView.findViewById(R.id.calendar_view);
+            Calendar currentCalendar = Calendar.getInstance(Locale.getDefault());
+
+            calendarView.setFirstDayOfWeek(Calendar.SUNDAY);
+
+            calendarView.setShowOverflowDate(false);
+
+//call refreshCalendar to update calendar the view
+            calendarView.refreshCalendar(currentCalendar);
+            AlertDialog alertDialog = dialogBuilder.create();
+
+            return alertDialog;
+
+        }
+
+    }
 }

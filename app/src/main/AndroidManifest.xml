@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.optimalbd.todolist">
 
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,9 +18,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddTodoActivity"></activity>
+        <activity android:name=".AddTodoActivity" />
         <activity android:name=".DetailsActivity" />
-        <activity android:name=".UpdateTodoActivity"></activity>
+        <activity android:name=".UpdateTodoActivity" />
+        <activity android:name=".CalenderEventActivity"></activity>
     </application>
 
 </manifest>
