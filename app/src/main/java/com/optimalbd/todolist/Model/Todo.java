@@ -5,6 +5,7 @@ package com.optimalbd.todolist.Model;
  */
 
 public class Todo {
+
     private String id;
     private String title;
     private String details;
@@ -13,6 +14,10 @@ public class Todo {
     private String time;
     private long selectedTime;
     private String type;
+
+    public Todo(long longDate) {
+        this.longDate = longDate;
+    }
 
     public Todo(String date, long longDate, String time, long selectedTime) {
         this.date = date;

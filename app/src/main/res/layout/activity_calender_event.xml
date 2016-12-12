@@ -14,27 +14,58 @@
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:visibility="gone"
         app:calendarTitleTextColor="@color/black"
         app:dayOfMonthTextColor="@color/black"
         app:dayOfWeekTextColor="@color/black"
-        android:visibility="gone"
         app:titleLayoutBackgroundColor="@color/white"
         app:weekLayoutBackgroundColor="@color/white" />
 
-    <com.github.sundeepk.compactcalendarview.CompactCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pre"
+            android:onClick="preClick"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:id="@+id/monthTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="23dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginStart="23dp"
+            android:text="Month"
+            android:textColor="@android:color/black"
+            android:textSize="23sp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:onClick="nextClick"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/compactcalendar_view"
         android:layout_width="fill_parent"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
         android:layout_height="250dp"
-        app:compactCalendarTextSize="12sp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         app:compactCalendarBackgroundColor="#ffe95451"
-        app:compactCalendarTextColor="#fff"
-        app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
         app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
         app:compactCalendarMultiEventIndicatorColor="#fff"
-        />
+        app:compactCalendarTextColor="#fff"
+        app:compactCalendarTextSize="12sp" />
 
 
     <ListView

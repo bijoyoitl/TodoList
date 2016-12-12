@@ -21,6 +21,7 @@ public class TodoManager {
     private SQLiteDatabase sqLiteDatabase;
     private Cursor cursor = null;
     private Context context;
+    Todo todo;
 
     public TodoManager(Context context) {
         this.context = context;
@@ -52,7 +53,6 @@ public class TodoManager {
 
     public ArrayList<Todo> getAllTodoTitle(long currentTime) {
         ArrayList<Todo> todoArrayList = null;
-        Todo todo;
 
         try {
             todoArrayList = new ArrayList<>();
@@ -86,7 +86,6 @@ public class TodoManager {
 
     public ArrayList<Todo> getAllDoneTitle(long currentTime) {
         ArrayList<Todo> todoArrayList = null;
-        Todo todo;
 
         try {
             todoArrayList = new ArrayList<>();
@@ -118,15 +117,15 @@ public class TodoManager {
 
         return todoArrayList;
     }
+
     public ArrayList<Todo> getAllCalenderEvent(String sDate) {
         ArrayList<Todo> todoArrayList = null;
-        Todo todo;
 
         try {
             todoArrayList = new ArrayList<>();
             sqLiteDatabase = todoDbHelper.getReadableDatabase();
 
-            String query = "SELECT * FROM " + TodoDbHelper.TODO_TABLE_NAME+ " where " + TodoDbHelper.TODO_DATE + " = '" + sDate + "'";
+            String query = "SELECT * FROM " + TodoDbHelper.TODO_TABLE_NAME + " where " + TodoDbHelper.TODO_DATE + " = '" + sDate + "'";
             cursor = sqLiteDatabase.rawQuery(query, null);
 
             if (!cursor.isLast()) {
@@ -134,7 +133,7 @@ public class TodoManager {
 
                     String id = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_ID));
                     String title = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TITLE));
-                    Log.e("TM", "title : "+title);
+                    Log.e("TM", "title : " + title);
                     String date = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_DATE));
                     String user_type = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_TYPE));
                     String id_time = cursor.getString(cursor.getColumnIndex(TodoDbHelper.TODO_SELECTED_TIME));
@@ -156,7 +155,7 @@ public class TodoManager {
 
     public ArrayList<Todo> getTodoDetails(String todoId) {
         ArrayList<Todo> todoArrayList = null;
-        Todo todo;
+
 
         try {
             todoArrayList = new ArrayList<>();
@@ -211,6 +210,31 @@ public class TodoManager {
         }
 
         return success;
+    }
+
+    public ArrayList<Todo> getAllLongDate() {
+        ArrayList<Todo> todoArrayList = null;
+        try {
+            todoArrayList = new ArrayList<>();
+            sqLiteDatabase = todoDbHelper.getReadableDatabase();
+
+            String query = "SELECT " + TodoDbHelper.TODO_LONG_DATE + " FROM " + TodoDbHelper.TODO_TABLE_NAME;
+            cursor = sqLiteDatabase.rawQuery(query, null);
+
+            if (!cursor.isLast()) {
+                while (cursor.moveToNext()) {
+                    long longDate = cursor.getLong(cursor.getColumnIndex(TodoDbHelper.TODO_LONG_DATE));
+                    todo = new Todo(longDate);
+                    todoArrayList.add(todo);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+        return todoArrayList;
     }
 
     public long updateTodoInfo(Todo todo, String id) {
@@ -269,6 +293,9 @@ public class TodoManager {
         }
         return success;
     }
+
+
+    //Date and time
 
     public long addDateTime(DateTime dateTime) {
         long success = 0;

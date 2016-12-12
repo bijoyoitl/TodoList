@@ -5,7 +5,9 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -24,7 +26,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
 public class CalenderEventActivity extends AppCompatActivity {
+
     ListView calenderListView;
     CustomCalendarView calendarView;
     Calendar currentCalendar;
@@ -32,6 +36,10 @@ public class CalenderEventActivity extends AppCompatActivity {
     long dateMilli;
     TodoManager todoManager;
     CompactCalendarView compactCalendarView;
+    ArrayList<Todo> longDateArrayList;
+    SimpleDateFormat df;
+    TextView monthTextView;
+    SimpleDateFormat dateFormatForMonth;
 
 
     @Override
@@ -42,100 +50,72 @@ public class CalenderEventActivity extends AppCompatActivity {
         calendarView = (CustomCalendarView) findViewById(R.id.calendar_view);
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         calenderListView = (ListView) findViewById(R.id.calenderListView);
+        monthTextView = (TextView) findViewById(R.id.monthTextView);
 
-        todoArrayList = new ArrayList<>();
         todoManager = new TodoManager(this);
+        todoArrayList = new ArrayList<>();
+        longDateArrayList = new ArrayList<>();
+        dateMilli = System.currentTimeMillis();
 
 
+        currentCalendar = Calendar.getInstance();
+        df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        dateFormatForMonth = new SimpleDateFormat("MMM-yyyy", Locale.getDefault());
 
 
-        // Add event 1 on Sun, 07 Jun 2015 18:20:51 GMT
-        Event ev1 =new Event(Color.GREEN, 1481738400000L, "Some extra data that I want to store.");
+        monthTextView.setText(dateFormatForMonth.format(currentCalendar.getTime()));
 
-        compactCalendarView.addEvent(ev1);
+        longDateArrayList = todoManager.getAllLongDate();
 
-        // Added event 2 GMT: Sun, 07 Jun 2015 19:10:51 GMT
-        Event ev2 = new Event(Color.GREEN, 1481479200000L);
-        compactCalendarView.addEvent(ev2);    // Added event 2 GMT: Sun, 07 Jun 2015 19:10:51 GMT
+        for (int i = 0; i < longDateArrayList.size(); i++) {
+            int color;
+            Long date = longDateArrayList.get(i).getLongDate();
 
-        Event q = new Event(Color.GREEN, 1481738400000L);
-        compactCalendarView.addEvent(q);    // Added event 2 GMT: Sun, 07 Jun 2015 19:10:51 GMT
-
-        Event w = new Event(Color.GREEN, 1481738400000L);
-        compactCalendarView.addEvent(w);
-
-//        List<Event> events = compactCalendarView.getEvents(1481392800000L); // can also take a Date object
-
+            if (currentCalendar.getTimeInMillis() > date) {
+                color = Color.GREEN;
+            } else {
+                color = Color.BLUE;
+            }
+            Event ev1 = new Event(color, date);
+            compactCalendarView.addEvent(ev1);
+        }
 
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                List<Event> events = compactCalendarView.getEvents(dateClicked);
-//                Log.d(TAG, "Day was clicked: " + dateClicked + " with events " + events);
-            }
 
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-//                Log.d(TAG, "Month was scrolled to: " + firstDayOfNewMonth);
-            }
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-       /* currentCalendar = Calendar.getInstance(Locale.getDefault());
-
-        calendarView.setFirstDayOfWeek(Calendar.SUNDAY);
-
-        calendarView.setShowOverflowDate(false);
-        calendarView.refreshCalendar(currentCalendar);
-
-
-        calendarView.setCalendarListener(new CalendarListener() {
-            @Override
-            public void onDateSelected(Date date) {
-                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                Toast.makeText(CalenderEventActivity.this, df.format(date), Toast.LENGTH_SHORT).show();
-
-                todoArrayList = todoManager.getAllCalenderEvent(df.format(date) + "");
+                String selectDate = df.format(dateClicked);
+                todoArrayList = todoManager.getAllCalenderEvent(selectDate);
                 TitleAdapter titleAdapter = new TitleAdapter(CalenderEventActivity.this, todoArrayList);
                 calenderListView.setAdapter(titleAdapter);
             }
 
             @Override
-            public void onMonthChanged(Date date) {
-                SimpleDateFormat df = new SimpleDateFormat("MM-yyyy", Locale.getDefault());
-                Toast.makeText(CalenderEventActivity.this, df.format(date), Toast.LENGTH_SHORT).show();
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                monthTextView.setText(dateFormatForMonth.format(firstDayOfNewMonth));
             }
         });
-        final Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Arch_Rival_Bold.ttf");
-        if (null != typeface) {
-            calendarView.setCustomTypeface(typeface);
-            calendarView.refreshCalendar(currentCalendar);
-        }*/
+
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-//
-//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-//        String formattedDate = df.format(currentCalendar.getTime());
-//
-//        todoArrayList = todoManager.getAllCalenderEvent(formattedDate);
-//        TitleAdapter titleAdapter = new TitleAdapter(CalenderEventActivity.this, todoArrayList);
-//        calenderListView.setAdapter(titleAdapter);
+
+        String formattedDate = df.format(currentCalendar.getTime());
+        todoArrayList = todoManager.getAllCalenderEvent(formattedDate);
+        TitleAdapter titleAdapter = new TitleAdapter(CalenderEventActivity.this, todoArrayList);
+        calenderListView.setAdapter(titleAdapter);
     }
 
 
+    public void preClick(View view) {
+        compactCalendarView.showPreviousMonth();
+    }
 
+    public void nextClick(View view) {
+        compactCalendarView.showNextMonth();
+    }
 }
