@@ -4,7 +4,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ public class CalenderEventActivity extends AppCompatActivity {
     SimpleDateFormat df;
     TextView monthTextView;
     SimpleDateFormat dateFormatForMonth;
+    Toolbar toolbar;
 
 
     @Override
@@ -51,6 +54,11 @@ public class CalenderEventActivity extends AppCompatActivity {
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         calenderListView = (ListView) findViewById(R.id.calenderListView);
         monthTextView = (TextView) findViewById(R.id.monthTextView);
+        toolbar=(Toolbar)findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Events");
 
         todoManager = new TodoManager(this);
         todoArrayList = new ArrayList<>();
@@ -117,5 +125,16 @@ public class CalenderEventActivity extends AppCompatActivity {
 
     public void nextClick(View view) {
         compactCalendarView.showNextMonth();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
