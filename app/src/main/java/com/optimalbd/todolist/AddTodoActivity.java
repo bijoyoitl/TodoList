@@ -1,22 +1,24 @@
 package com.optimalbd.todolist;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -48,6 +50,8 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     Button submitButton;
     Button cancelButton;
 
+    Spinner notificationSpinner;
+
     TodoManager todoManager;
     Todo todo;
 
@@ -76,6 +80,9 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     int selectSecond;
     Date date1;
     long dateMilli;
+    String notificationTime;
+
+    String[] times = {"Select time", "Just Time", "Before 10 minutes", "Before 30 minutes", "Before 1 hour"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +109,9 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
 
         currentTime = System.currentTimeMillis();
 
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, times);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        notificationSpinner.setAdapter(arrayAdapter);
 
     }
 
@@ -115,7 +125,7 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
         detailsEditText = (EditText) findViewById(R.id.detailsEditText);
         dateEditText = (TextView) findViewById(R.id.dateEditText);
         timeEditText = (TextView) findViewById(R.id.timeEditText);
-
+        notificationSpinner = (Spinner) findViewById(R.id.notificationSpinner);
         submitButton = (Button) findViewById(R.id.submitButton);
         cancelButton = (Button) findViewById(R.id.cancelButton);
     }
@@ -127,8 +137,6 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
 
                 type = typeRadioGroup.getCheckedRadioButtonId();
                 title = titleEditText.getText().toString().trim();
-
-
                 details = detailsEditText.getText().toString().trim();
                 date = dateEditText.getText().toString().trim();
                 time = timeEditText.getText().toString().trim();
@@ -159,21 +167,40 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                         Toast.makeText(context, "Todo Add Successful", Toast.LENGTH_SHORT).show();
                         int todoId = todoManager.getLastInsertId();
                         DateTime dateTime = new DateTime(todoId, selectYear, selectMonth, selectDay, selectHour, selectMinute, selectSecond);
-                        long a = todoManager.addDateTime(dateTime);
+                        todoManager.addDateTime(dateTime);
 
-                        if (a > 0) {
-                            Log.e("ATA", " date time add successful");
-                        } else {
-                            Log.e("ATA", " date time add fail");
+                        notificationTime = (notificationSpinner.getSelectedItemPosition() + 1) + "";
+                        Log.e("AA", " Selected time : " + selectedTime);
+                        if (!notificationTime.equals("")) {
+
+                            switch (notificationTime) {
+                                case "2":
+                                    notificationSet(0L);
+                                    break;
+                                case "3":
+                                    notificationSet(600000L);
+                                    break;
+                                case "4":
+                                    notificationSet(1800000L);
+                                    break;
+                                case "5":
+                                    notificationSet(3600000L);
+                                    break;
+                                default:
+                                    Toast.makeText(context, "Notification Not Set !", Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+
                         }
+
 
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+
                     } else {
                         Toast.makeText(context, "Todo Add Failed", Toast.LENGTH_SHORT).show();
                     }
-
 
                 }
 
@@ -246,6 +273,18 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
 
+    }
+
+    private void notificationSet(Long time) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, alertReceiver.class);
+        int todoId = todoManager.getLastInsertId();
+        intent.putExtra("todoId", todoId);
+        intent.putExtra("title", title);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        long notification_time = selectedTime - time;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, notification_time, pendingIntent);
+        Log.e("AAA", "notification time : " + notification_time);
     }
 
     private String Hour12(String data) throws ParseException {
